@@ -4,6 +4,7 @@ import { createAppHandler } from '../api/app.js';
 import { createTelegramHandler } from '../api/telegram.js';
 import { signRole, verifyRole } from '../lib/session.mjs';
 import { publicTransaction, readState } from '../lib/service.mjs';
+import { SupabaseStore } from '../lib/store.mjs';
 const env = { SESSION_SECRET: 'test-session-secret-with-more-than-thirty-two-characters', SUPABASE_URL: 'https://unit-test.supabase.co', SUPABASE_SERVICE_ROLE_KEY: 'local-test-only', TELEGRAM_WEBHOOK_SECRET: 'local-webhook-test' };
 const transaction = { reference: 'EXTRA', kind: 'sale', submitted_at: '2026-10-11T00:00:00Z', submitted_by: 'richard', source: 'website', customer: 'Fictional customer', project: 'A', description: 'Delivered service', amount_cents: 10000, proposed_split_bp: [5000,3000,2000], final_split_bp: null, commission_pool_cents: 0, commission_cents: [0,0,0], category: null, proposed_allocation: null, final_allocation: null, status: 'pending', version: 1, decision_at: null };
 function request(handler, body, role, method = 'POST', headers = {}) {
@@ -17,6 +18,20 @@ function stubStore() {
   const calls = [];
   return { calls, configured: true, async rpc(name, args) { calls.push({ name, args }); return { transaction, unchanged: false }; }, async listJobs() { return []; }, async listTransactions(role) { calls.push({ role }); return role === 'richard' || role === 'svetlana' ? [transaction] : []; }, async listAccounts() { return []; }, async getSettings() { return { fail_sheets: false, fail_telegram: false }; }, async setFailure() { calls.push({ failure: true }); } };
 }
+
+test('Supabase opaque secret keys and legacy JWT keys use their required authentication headers', async () => {
+  for (const key of ['sb_secret_local-test-only', 'legacy-local-test-only']) {
+    let captured;
+    const store = new SupabaseStore({ ...env, SUPABASE_SERVICE_ROLE_KEY: key }, async (_url, options) => {
+      captured = options.headers;
+      return new Response('[]', { status: 200 });
+    });
+    await store.listTransactions('svetlana');
+    assert.equal(captured.apikey, key);
+    if (key.startsWith('sb_secret_')) assert.equal(captured.Authorization, undefined);
+    else assert.equal(captured.Authorization, `Bearer ${key}`);
+  }
+});
 test('Role cookie resists signature tampering and expires', () => {
   const token = signRole('richard', env.SESSION_SECRET, 0);
   assert.equal(verifyRole(token, env.SESSION_SECRET, 1000), 'richard');
