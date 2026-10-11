@@ -1,0 +1,29 @@
+{
+  "note": "Assignment fixtures for automated local tests only. The application never imports this file or seeds a financial database.",
+  "sales": [
+    {"reference":"S01","employee":"richard","customer":"Olivia Rose","description":"One proud uncle and an emotional grandmother","project":"A","amount":"1000.00","split":[50,30,20],"finalSplit":[50,30,20]},
+    {"reference":"S02","employee":"anastasia","customer":"Daniel King","description":"University friends, dancing, and the stripping performance","project":"B","amount":"2000.00","split":[0,50,50],"finalSplit":[20,40,40]},
+    {"reference":"S03","employee":"jean_claude","customer":"Emma Stonebridge","description":"Premium relatives, including an uncle presented as a surgeon","project":"A","amount":"1500.00","split":[40,40,20],"finalSplit":[20,30,50]},
+    {"reference":"S04","employee":"richard","customer":"Lucas Green","description":"Small group of loud university friends","project":"B","amount":"800.00","split":[25,25,50],"finalSplit":[25,25,50]},
+    {"reference":"S05","employee":"richard","customer":"Mia Brooks","description":"Extra guests and an embarrassing speech","project":"B","amount":"600.00","split":[100,0,0],"finalSplit":null}
+  ],
+  "expenses": [
+    {"reference":"E01","description":"Rented suit and fake pearl necklace for the relatives","category":"Materials","amount":"120.00","allocation":"A","finalAllocation":"A"},
+    {"reference":"E02","description":"Taxi for the grandmother; Kevin selected the wrong project","category":"Travel","amount":"80.00","allocation":"B","finalAllocation":"A"},
+    {"reference":"E03","description":"Monthly company website subscription","category":"Other","amount":"100.00","allocation":"Company overhead","finalAllocation":"Company overhead"},
+    {"reference":"E04","description":"Replacement costumes after an enthusiastic dance performance","category":"Materials","amount":"250.00","allocation":"B","finalAllocation":"B"},
+    {"reference":"E05","description":"Minibus for university friends; Kevin selected the wrong project again","category":"Travel","amount":"90.00","allocation":"A","finalAllocation":"B"},
+    {"reference":"E06","description":"Company telephone subscription","category":"Other","amount":"60.00","allocation":"Company overhead","finalAllocation":"Company overhead"},
+    {"reference":"E07","description":"Emergency replacement clothing; project allocation still needs checking","category":"Materials","amount":"140.00","allocation":"A","finalAllocation":null}
+  ],
+  "rounding_cases": [
+    {"label":"Half-cent pool rounds upward","sale_cents":5,"shares":[100,0,0],"pool_cents":1,"earned_cents":{"richard":1,"anastasia":0,"jean_claude":0}},
+    {"label":"Positive residual Richard first tie","sale_cents":5,"shares":[45,45,10],"pool_cents":1,"earned_cents":{"richard":1,"anastasia":0,"jean_claude":0}},
+    {"label":"Positive residual Anastasia first tie","sale_cents":5,"shares":[20,40,40],"pool_cents":1,"earned_cents":{"richard":0,"anastasia":1,"jean_claude":0}},
+    {"label":"Negative residual Richard first tie","sale_cents":25,"shares":[50,50,0],"pool_cents":3,"earned_cents":{"richard":1,"anastasia":2,"jean_claude":0}},
+    {"label":"Negative residual sole-largest Richard","sale_cents":15,"shares":[34,33,33],"pool_cents":2,"earned_cents":{"richard":0,"anastasia":1,"jean_claude":1}},
+    {"label":"Fractional percentages Jean-Claude largest","sale_cents":5,"shares":[33.33,33.33,33.34],"pool_cents":1,"earned_cents":{"richard":0,"anastasia":0,"jean_claude":1}},
+    {"label":"Pool can round to zero","sale_cents":1,"shares":[0,100,0],"pool_cents":0,"earned_cents":{"richard":0,"anastasia":0,"jean_claude":0}},
+    {"label":"Negative residual Anastasia first tie","sale_cents":25,"shares":[0,50,50],"pool_cents":3,"earned_cents":{"richard":0,"anastasia":1,"jean_claude":2}}
+  ]
+}
