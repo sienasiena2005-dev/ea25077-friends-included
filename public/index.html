@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#355344">
+  <meta name="description" content="Friends Included Ltd: wedding project sales, expenses, commissions and management decisions. Elina Abdulmuslimova, ea25077.">
+  <title>Friends Included · Finance desk</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Friends Included home">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><circle cx="15" cy="23" r="10" stroke="currentColor" stroke-width="2.2"/><circle cx="25" cy="23" r="10" stroke="currentColor" stroke-width="2.2"/><path d="m20 3 3 5-3 5-3-5 3-5Z" fill="currentColor"/></svg></span>
+      <span>Friends Included<span class="brand-caption">THE FINANCE DESK</span></span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="#workspace">Workspace</a><a href="#records">Records</a><a href="#connections" class="manager-only">Connections</a></nav>
+    <span class="student">Elina Abdulmuslimova<span>ea25077 · Day 4</span></span>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div><p class="eyebrow"><span class="dot"></span> FRIENDS INCLUDED LTD</p><h1 id="page-title">Every guest has a story.<br><em>Every euro has a record.</em></h1><p class="hero-copy">Wedding guests for hire. Sales, expenses and commissions in one place.<span class="tagline">All friendships expire at checkout.</span></p></div>
+      <div class="hero-ornament" aria-hidden="true"><span class="ornament-star">✳</span><span class="ornament-ring"></span><p>Love, laughter<br>&amp; a balanced ledger.</p></div>
+    </section>
+
+    <section class="role-bar" aria-label="Access controls">
+      <div class="role-control"><label for="role">Demonstration role</label><select id="role"><option value="svetlana">Svetlana de Monte Carlo</option><option value="richard">Richard “Call Me Dick” Darling</option><option value="anastasia">Anastasia Ferrari</option><option value="jean_claude">Jean-Claude Bērziņš</option><option value="kevin">Kevin von Whatever</option></select></div>
+      <p id="role-description">Manager · inspect records and make decisions.</p>
+      <button id="refresh" class="button button-light" type="button"><span aria-hidden="true">↻</span> Refresh records</button>
+      <div id="connection-indicator" class="connection-indicator" role="status"><span class="dot"></span> Connecting</div>
+    </section>
+
+    <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+    <section id="readiness" class="readiness" hidden aria-label="Connection readiness"></section>
+
+    <section id="workspace" class="workspace">
+      <div class="section-heading"><div><p class="eyebrow" id="workspace-eyebrow">THE BIG PICTURE</p><h2 id="workspace-title">Company overview</h2></div><p id="workspace-subtitle">EUR · services delivered and paid · no VAT</p></div>
+      <div id="dashboard" aria-live="polite"><div class="loading-card">Loading saved financial records…</div></div>
+    </section>
+
+    <section id="entry-section" class="entry-section" hidden aria-labelledby="entry-title">
+      <div class="section-heading"><div><p class="eyebrow">CAPTURE THE DETAILS</p><h2 id="entry-title">Record a transaction</h2></div><p id="entry-subtitle"></p></div>
+      <form id="sale-form" class="entry-card" hidden>
+        <div class="form-intro"><span class="form-icon">↗</span><div><h3>New sale</h3><p>The commission pool is 10% of the sale. Your proposal is reviewed by Svetlana.</p></div></div>
+        <div class="form-grid"><label>Unique reference<input name="reference" maxlength="40" placeholder="e.g. S06" required autocomplete="off"></label><label>Customer<input name="customer" maxlength="160" placeholder="Customer’s full name" required></label><label>Wedding project<select name="project" required><option value="A">A · Respectable Relatives</option><option value="B">B · Drunk University Friends</option></select></label><label>Sale amount (€)<input name="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0.00" required></label><label class="span-two">Description<textarea name="description" rows="2" maxlength="1200" placeholder="What did the customer receive?" required></textarea></label></div>
+        <fieldset class="commission-fieldset"><legend>Proposed share of the commission pool</legend><div class="split-grid"><label>Richard (%)<input name="richard" type="number" min="0" max="100" step="0.01" value="100" required></label><label>Anastasia (%)<input name="anastasia" type="number" min="0" max="100" step="0.01" value="0" required></label><label>Jean-Claude (%)<input name="jean_claude" type="number" min="0" max="100" step="0.01" value="0" required></label><div class="split-total"><span>Total share</span><strong id="split-total">100%</strong><span id="pool-preview">Pool €0.00</span></div></div></fieldset>
+        <div class="form-footer"><p>Salesperson: <strong id="sale-submitter"></strong><br>Saved as Pending approval. It enters income only after approval.</p><button class="button button-primary" type="submit">Submit sale <span aria-hidden="true">↗</span></button></div>
+      </form>
+      <form id="expense-form" class="entry-card" hidden>
+        <div class="form-intro"><span class="form-icon">↘</span><div><h3>New expense</h3><p>Every saved expense immediately reduces company result. Svetlana confirms project allocations.</p></div></div>
+        <div class="form-grid"><label>Unique reference<input name="reference" maxlength="40" placeholder="e.g. E08" required autocomplete="off"></label><label>Expense amount (€)<input name="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0.00" required></label><label>Category<select name="category" required><option value="Materials">Materials</option><option value="Travel">Travel</option><option value="Other">Other</option></select></label><label>Proposed allocation<select name="allocation" required><option value="A">A · Respectable Relatives</option><option value="B">B · Drunk University Friends</option><option value="Company overhead">Company overhead</option></select></label><label class="span-two">Description<textarea name="description" rows="2" maxlength="1200" placeholder="What was paid for?" required></textarea></label></div>
+        <div class="form-footer"><p>Reporter: <strong>Kevin von Whatever</strong><br>Company overhead is allocated automatically.</p><button class="button button-primary" type="submit">Submit expense <span aria-hidden="true">↗</span></button></div>
+      </form>
+    </section>
+
+    <section id="records" class="records-section" aria-labelledby="records-title">
+      <div class="section-heading"><div><p class="eyebrow">FOLLOW EVERY DECISION</p><h2 id="records-title">Transaction records</h2></div><p id="records-subtitle">Original proposals stay visible alongside final decisions.</p></div>
+      <div class="records-toolbar"><div class="tabs" role="tablist" aria-label="Transaction type"><button id="sales-tab" class="tab active" type="button" role="tab" aria-selected="true">Sales <span id="sales-count">0</span></button><button id="expenses-tab" class="tab" type="button" role="tab" aria-selected="false">Expenses <span id="expenses-count">0</span></button></div><label class="search-label"><span class="sr-only">Search records</span><input id="record-search" type="search" placeholder="Search reference or description" autocomplete="off"></label><label class="status-filter-label"><span class="sr-only">Filter records by status</span><select id="status-filter"><option value="all">All statuses</option><option value="pending">Needs a decision</option><option value="approved">Approved / allocated</option><option value="integration">Delivery needs attention</option></select></label></div>
+      <div id="record-list" class="record-list" aria-live="polite"><div class="loading-card">Loading transactions…</div></div>
+    </section>
+
+    <section id="connections" class="connections-section manager-only" aria-labelledby="connections-title">
+      <div class="section-heading"><div><p class="eyebrow">ONE CONNECTED SYSTEM</p><h2 id="connections-title">Connections &amp; Telegram access</h2></div><p>Manager setup · fictional employees only</p></div>
+      <div class="connections-grid"><div class="connection-card"><h3>Connect a Telegram account</h3><p>Start the bot first, then use <code>/whoami</code> to find your user ID. A user must be linked here before the bot accepts transactions. The bot records the chat ID directly.</p><form id="mapping-form"><label>Telegram user ID<input name="userId" inputmode="numeric" pattern="[0-9]+" placeholder="Numeric user ID" required></label><label>Employee<select name="employee" required><option value="richard">Richard “Call Me Dick” Darling</option><option value="anastasia">Anastasia Ferrari</option><option value="jean_claude">Jean-Claude Bērziņš</option><option value="kevin">Kevin von Whatever</option><option value="svetlana">Svetlana de Monte Carlo</option></select></label><button class="button button-primary" type="submit">Save Telegram link</button></form><p class="fine-print">Changing a link does not change existing records’ submitters or saved notification destinations.</p></div><div class="connection-card"><h3>Connection status</h3><div id="integration-status" class="integration-status"></div><h4>Current Telegram links</h4><div id="mapping-list"></div><p class="fine-print">Google Sheets is a viewing copy. Transaction decisions and corrections belong in this application.</p><details class="failure-controls"><summary>Delivery interruption checks</summary><p>Pause an outbound channel to check that records stay saved, delivery reports a failure, and retry updates the same record. Turn the interruption off before retrying.</p><label><input id="failure-sheets" type="checkbox" data-failure="sheets"> Interrupt Google Sheets delivery</label><label><input id="failure-telegram" type="checkbox" data-failure="telegram"> Interrupt Telegram notifications</label></details></div></div>
+    </section>
+
+    <section class="how-it-works" aria-labelledby="instructions-title"><div><p class="eyebrow">A SMALL GUIDE TO THE DESK</p><h2 id="instructions-title">Report. Review. Reconcile.</h2></div><ol><li><span>01</span><div><h3>Report a transaction</h3><p>Select a salesperson for sales or Kevin for expenses. Use the website form or the linked Telegram bot.</p></div></li><li><span>02</span><div><h3>Make the decision</h3><p>Select Svetlana. Open a pending record, review its proposal, and confirm or change the commission split or expense allocation.</p></div></li><li><span>03</span><div><h3>Check the result</h3><p>Approved sales and commissions update results. All recorded expenses count immediately. Sheets and decision notifications update automatically.</p></div></li></ol></section>
+  </main>
+  <footer class="site-footer"><div><span class="footer-brand">Friends Included Ltd</span><p>All friendships expire at checkout.<br>Elina Abdulmuslimova · ea25077</p></div><div class="footer-links" id="resource-links"><span>Loading connected resources…</span></div><div class="footer-note">Fictional people and transactions.<br>Fixed business rules · amounts in EUR</div></footer>
+  <noscript><div class="noscript">JavaScript is required to retrieve saved records and submit transactions.</div></noscript>
+</body>
+</html>
