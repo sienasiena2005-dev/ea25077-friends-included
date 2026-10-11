@@ -31,7 +31,7 @@ Set server-side Vercel environment variables:
 | Variable | Purpose |
 | --- | --- |
 | `SUPABASE_URL` | Project API URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | Private server service-role key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Private server secret API key (`sb_secret_...`) or legacy service-role JWT |
 | `SESSION_SECRET` | At least 32 random characters for signed role sessions |
 | `TELEGRAM_BOT_TOKEN` | Private BotFather token |
 | `TELEGRAM_WEBHOOK_SECRET` | Random letters/numbers/underscore/hyphen webhook secret |
