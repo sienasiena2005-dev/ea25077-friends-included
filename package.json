@@ -1,0 +1,9 @@
+{
+  "name": "friends-included-ea25077",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": { "start": "node scripts/local-server.mjs", "test": "node --test test/*.test.mjs", "test:sql": "node test/sql-validation.mjs", "check": "node scripts/check.mjs" },
+  "devDependencies": { "@electric-sql/pglite": "0.5.8" }
+}
