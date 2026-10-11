@@ -56,7 +56,7 @@ test('Failed Google request is rejected without claiming synchronization success
 test('Telegram HTTP200 with ok:false is a failure, not a sent notification', async () => {
   await assert.rejects(telegramSend('123', 'Test', env, async () => ok({ ok: false, error_code: 403, description: 'Bot was blocked' })), /delivery failed/);
 });
-test('Outbox uses latest financial record for Sheets, frozen event destination for Telegram', async () => {
+test('Outbox preserves frozen notification destination and records a forced interruption as failed', async () => {
   const claimed = { sheets: false, telegram: false }, finished = [], seenChats = [];
   const current = { ...pending, status: 'approved', final_split_bp: [2000,4000,4000], commission_pool_cents: 10000, commission_cents: [2000,4000,4000] };
   const store = {
@@ -74,4 +74,32 @@ test('Outbox uses latest financial record for Sheets, frozen event destination f
   assert.equal(finished[0].p_success, false); assert.deepEqual(seenChats, ['original-chat-123']);
   assert.equal(result[1].status, 'sent');
   assert.equal(current.status, 'approved'); // Delivery failures never undo the saved decision.
+});
+test('An old Sheets retry reads the current approved record, not its old pending payload', async () => {
+  let claimed = false, written = null, readCurrent = 0, completed = null;
+  const current = { ...pending, status: 'approved', final_split_bp: [2000,4000,4000], commission_pool_cents: 10000, commission_cents: [2000,4000,4000] };
+  const store = {
+    async getSettings() { return { fail_sheets: false, fail_telegram: false }; },
+    async getTransaction() { readCurrent++; return current; },
+    async rpc(name, args) {
+      if (name === 'fi_claim_outbox') {
+        if (args.p_channel !== 'sheets' || claimed) return null;
+        claimed = true; return { id: 1, reference: 'CHECK', version: 1, channel: 'sheets', event: 'submission', payload: pending, lease_token: 'lease' };
+      }
+      if (name === 'fi_finish_outbox') { completed = args; return null; }
+      throw new Error('Unexpected RPC');
+    },
+  };
+  const fetcher = async (url, options = {}) => {
+    if (url === 'https://oauth2.googleapis.com/token') return ok({ access_token: 'mock', expires_in: 3600 });
+    if (url.includes('?fields=sheets.properties')) return ok({ sheets: [{ properties: { title: 'Sales', sheetId: 10 } }, { properties: { title: 'Expenses', sheetId: 20 } }] });
+    if (url.endsWith(':batchUpdate')) return ok({ replies: [] });
+    const decoded = decodeURIComponent(url);
+    if (decoded.includes('Sales!A2:A') && !options.method) return ok({ values: [['CHECK']] });
+    if (options.method === 'PUT') { if (decoded.includes('Sales!A2:T2')) written = JSON.parse(options.body).values[0]; return ok({ updatedRows: 1 }); }
+    throw new Error('Unexpected HTTP adapter request');
+  };
+  const result = await drainOutbox(store, { env, fetcher, limit: 1 });
+  assert.equal(readCurrent, 1); assert.equal(result[0].status, 'sent'); assert.equal(completed.p_success, true);
+  assert.deepEqual(written.slice(10, 13), [20,40,40]); assert.deepEqual(written.slice(13, 17), [100,20,40,40]); assert.equal(written[17], 'Approved');
 });
